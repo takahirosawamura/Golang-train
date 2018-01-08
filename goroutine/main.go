@@ -8,20 +8,37 @@ import (
 func main() {
   log.Print("started.")
 
-  // １秒かかるコマンド
-  log.Print("slwwp1 started.")
-  time.Sleep(1* time.Second)
-  log.Print("sleep1 finished.")
+ // チャネル
+  finished := make(chan bool)
 
-  //2秒かかるコマンド
-  log.Print("sleep2 started.")
-  time.Sleep(2 * time.Second)
-  log.Print("sleep2 finished.")
+  go func() {
+    // １秒かかるコマンド
+    log.Print("sleep1 started.")
+    time.Sleep(1* time.Second)
+    log.Print("sleep1 finished.")
+    finished <- true
+  }() 
 
-  // 3秒かかるコマンド
-  log.Print("sleep3 started.")
-  time.Sleep(3 * time.Second)
-  log.Print("sleep3 finished.")
+  go func() {
+    //2秒かかるコマンド
+    log.Print("sleep2 started.")
+    time.Sleep(2 * time.Second)
+    log.Print("sleep2 finished.")
+    finished <- true
+  }()
 
-  log.Print("all finished.")
+  go func() {
+    // 3秒かかるコマンド
+    log.Print("sleep3 started.")
+    time.Sleep(3 * time.Second)
+    log.Print("sleep3 finished.")
+    finished <- true
+  }()
+
+  //終わるまで待つ
+    <- finished
+    <- finished
+    <- finished
+
+    log.Print("all finished.")
 }
