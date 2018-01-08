@@ -19,8 +19,7 @@ func main() {
     finished <- true
   }() 
 
-  go func() {
-    //2秒かかるコマンド
+  go func() { //2秒かかるコマンド
     log.Print("sleep2 started.")
     time.Sleep(2 * time.Second)
     log.Print("sleep2 finished.")
@@ -35,10 +34,9 @@ func main() {
     finished <- true
   }()
 
-  //終わるまで待つ
+  //終わるまで待つ(for文で回数指定させる)
+  for  i := 1; i <= 3; i++ { 
     <- finished
-    <- finished
-    <- finished
-
+  }
     log.Print("all finished.")
 }
