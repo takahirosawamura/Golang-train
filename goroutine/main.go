@@ -2,48 +2,51 @@ package main
 
 import (
   "log"
+  "sync"
   "time"
 )
 
 func main() {
-  log.Print("started.")
+    log.Print("started.")
 
- // チャネル
-  finished := make(chan bool)
+    // 配列
+    funcs := []func(){
+        func() {
+            // 1秒かかるコマンド
+            log.Print("sleep1 started.")
+            time.Sleep(1 * time.Second)
+            log.Print("sleep1 finished.")
+        },
+        func() {
+            // 2秒かかるコマンド
+            log.Print("sleep2 started.")
+            time.Sleep(2 * time.Second)
+            log.Print("sleep2 finished.")
+        },
+        func() {
+            // 3秒かかるコマンド
+            log.Print("sleep3 started.")
+            time.Sleep(3 * time.Second)
+            log.Print("sleep3 finished.")
+        },
+    }
 
-  //配列
-  funcs :=[]func(){
-    func() {
-      // １秒かかるコマンド
-      log.Print("sleep1 started.")
-      time.Sleep(1* time.Second)
-      log.Print("sleep1 finished.")
-      finished <- true
-    }, 
-    func() { //2秒かかるコマンド
-      log.Print("sleep2 started.")
-      time.Sleep(2 * time.Second)
-      log.Print("sleep2 finished.")
-      finished <- true
-    },
-    func() {
-      // 3秒かかるコマンド
-      log.Print("sleep3 started.")
-      time.Sleep(3 * time.Second)
-      log.Print("sleep3 finished.")
-      finished <- true
-    },
-  }
+    var waitGroup sync.WaitGroup
 
-  //並行化する
-  for _, sleep := range funcs {
-    go sleep()
-  }
+    // 関数の数だけ並行化する
+    for _, sleep := range funcs {
+        waitGroup.Add(1) // 待つ数をインクリメント
 
-  //終わるまでfor文で回数指定させる
-  for i := 0; i < len(funcs); i++ {
-    <-finished
-  }
+        // Goルーチンに入る
+        go func(function func()) {
+            defer waitGroup.Done() // 待つ数をデクリメント
+            function()
+        }(sleep)
 
-  log.Print("all finished.")
+    }
+
+    waitGroup.Wait() // 待つ数がゼロになるまで処理をブロックする
+
+    log.Print("all finished.")
 }
+
