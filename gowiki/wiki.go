@@ -19,7 +19,10 @@
       filename := p.Title + ".txt"
       return ioutil.WriteFile(filename, p.Body, 0600)
   }
-  
+ 
+  var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+
+ 
   func loadPage(title string) (*Page, error) {
       filename := title + ".txt"
       body, err := ioutil.ReadFile(filename)
@@ -33,12 +36,7 @@
       t, _ := template.ParseFiles(tmpl + ".html")
       if err != nil {
           http.Error (w, err.Error()), http.StatusInternalServerError)
-          return
       } 
-      err = t.Execute(w, p)
-      if err != nil {
-          http.Error(w, err.Error(), http.StatusInternalServerError)
-      }
   }
  
   func viewHandler(w http.ResponseWriter, r *http.Request) {
