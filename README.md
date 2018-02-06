@@ -40,7 +40,7 @@ AnythingAnythingAnything
 
 ## Wanna study
 - Container: Docker/Kubernete
-- OSS:Lightning/Eth
+- OSS: Lightning/Eth
 
 ## Author
 
