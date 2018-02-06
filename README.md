@@ -38,6 +38,10 @@ AnythingAnythingAnything
 AnythingAnythingAnything
 AnythingAnythingAnything
 
+## Wanna study
+- Container: Docker/Kubernete
+- OSS:Lightning/Eth
+
 ## Author
 
 [@]tkcolorado
